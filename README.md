@@ -9,30 +9,30 @@ Montar un VPS de proxy inverso en la red TOR para mostrar el contenido de otro V
 Nota: Asegúrate de que estás utilizando un VPS con una distribución de Linux compatible, como Ubuntu o Debian.
 
 Actualiza el sistema:
-
+```ruby
 sudo apt-get update && sudo apt-get upgrade -y
-
+'''
 Instala TOR y Nginx en el VPS:
-
+```ruby
 sudo apt-get install tor nginx -y
-
+'''
 Configura TOR:
 
 Abre el archivo de configuración de TOR:
-
+```ruby
 sudo nano /etc/tor/torrc
-
+'''
 Añade las siguientes líneas al final del archivo:
-
+```ruby
 HiddenServiceDir /var/lib/tor/hidden_service/ 
 HiddenServicePort 80 127.0.0.1:8080
-
+'''
 Guarda y cierra el archivo (Ctrl + X, luego Y, y presiona Enter).
 
 Reinicia TOR y obtén tu dirección .onion:
-
+```ruby
 sudo systemctl restart tor sudo cat /var/lib/tor/hidden_service/hostname
-
+'''
 Toma nota de la dirección .onion generada.
 
 Configura Nginx como proxy inverso:
@@ -40,7 +40,7 @@ Configura Nginx como proxy inverso:
 Crea un archivo de configuración para el sitio web:
 
  
-
+```ruby
 server {
    listen 8080;
    server_name pcxodijkwovkpyhkyrdyqdnfs63ulvan7bh4ukr2qvds6cnwcnqftaid.onion;
@@ -70,34 +70,34 @@ server {
    }
 }
  
-
+'''
 generar un certificado autofirmado de OpenSSL
 
 Instala OpenSSL:
-
+```ruby
 sudo apt-get install openssl -y
-
+'''
 Crea un directorio para almacenar el certificado y la clave:
-
+```ruby
 sudo mkdir /etc/nginx/ssl
-
+'''
 Genera el certificado y la clave privada autofirmados:
-
+```ruby
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
-
+'''
 Durante el proceso, se te pedirá que proporciones información sobre la organización y el servidor. Puedes rellenar estos campos o dejarlos en blanco presionando Enter.
 
 Habilita el sitio web y reinicia Nginx:
-
+```ruby
 sudo ln -s /etc/nginx/sites-available/hidden-service /etc/nginx/sites-enabled/ sudo systemctl restart nginx
  
-
+'''
 Configura el firewall (opcional pero recomendado):
 
 Si tu VPS tiene un firewall activo (como ufw), asegúrate de permitir el tráfico de TOR y Nginx:
-
+```ruby
 sudo ufw allow 80/tcp sudo ufw allow 8080/tcp sudo ufw allow 443/tcp sudo ufw allow 8443/tcp 
-
+'''
 Una vez que hayas completado estos pasos, tu VPS de proxy inverso en la red TOR estará configurado y mostrará el contenido de tu otro VPS en la clearnet a través de la dirección .onion generada.
 
 That's all...
